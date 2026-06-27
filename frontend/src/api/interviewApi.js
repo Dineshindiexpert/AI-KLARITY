@@ -34,7 +34,7 @@ export const finishInterview = async (data) => {
 -------------------------*/
 export const getLatestReport = async () => {
   try {
-    // सीधे फिक्स एंडपॉइंट पर हिट मारो, टोकन अपने आप यूजर पहचान लेगा
+     
     const res = await api.get("/interview/latest-report");
     return res.data;
   } catch (error) {
