@@ -1,0 +1,99 @@
+// Aapke Project Ke Theme Variables
+$primary:#6938EF;
+$secondary: #092C4C;
+$dark: #1B2850;
+$white: #ffffff;
+$light: #F9FAFB;
+$info: #155EEF;
+$warning: #FFCA18;
+$success: #28C76F;
+$danger: #FF0000;
+$cyan: #06AED4;
+$indigo: #3538CD;
+$orange: #E04F16;
+$pink: #DD2590;
+$purple: #6938EF;
+$teal: #6938EF;
+
+// Text
+$text-dark: #212B36;
+$text-gray: #646B72;
+$border: #E6EAED;
+
+// FONT FAMILY & WEIGHTS
+$font-primary: 'Nunito Sans', sans-serif;
+$font-black: 900;
+$font-bold: 700;
+$font-semi-bold: 600;
+$font-regular: 400;
+
+// Custom 404 Page Wrapper
+.notfound-wrapper {
+  background-color: $dark;
+  font-family: $font-primary;
+  overflow: hidden;
+
+  // Background Neon Glow
+  .glow-effect {
+    top: 25%;
+    left: 50%;
+    width: 350px;
+    height: 350px;
+    background-color: rgba($primary, 0.08);
+    filter: blur(130px);
+    z-index: 0;
+  }
+
+  // Large 404 Text with Gradient
+  .gradient-text {
+    font-size: 8.5rem;
+    font-weight: $font-black;
+    letter-spacing: 0.05em;
+    background: linear-gradient(to right, $primary, $purple);
+    -webkit-background-clip: text;
+    -webkit-text-fillColor: transparent;
+    margin: 0;
+  }
+
+  // Heading Title
+  .error-title {
+    color: $white;
+    font-size: 1.8rem;
+    font-weight: $font-bold;
+  }
+
+  // Subtext Description
+  .error-desc {
+    color: $text-gray;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 440px;
+    font-weight: $font-regular;
+  }
+
+  // Action Button
+  .custom-btn {
+    background-color: $primary;
+    color: $dark;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: $font-semi-bold;
+    box-shadow: 0 8px 24px rgba($primary, 0.2);
+    transition: all 0.3s ease-in-out;
+    border: none;
+
+    &:hover {
+      background-color: darken($primary, 8%);
+      transform: translateY(-2px);
+      color: $dark;
+    }
+  }
+
+  // Footer Branding
+  .footer-text {
+    color: $text-gray;
+    font-size: 0.8rem;
+    bottom: 24px;
+    font-weight: 500;
+  }
+}

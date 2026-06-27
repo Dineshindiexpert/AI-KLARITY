@@ -1,0 +1,21 @@
+.glow {
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+}
+
+.glow-1 {
+  width: 350px;
+  height: 350px;
+  background: #7c3aed;
+  top: 10%;
+  left: 10%;
+}
+
+.glow-2 {
+  width: 300px;
+  height: 300px;
+  background: #00d4ff;
+  right: 10%;
+  bottom: 10%;
+}

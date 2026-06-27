@@ -1,0 +1,274 @@
+/* ---------- GLOBAL PAGE ---------- */
+
+.report-page {
+  min-height: 100vh;
+  background: #0b0f19;
+  position: relative;
+  overflow-x: hidden;
+  padding-top: 60px;
+  font-family: "Inter", sans-serif;
+}
+
+/* ---------- LOADING ---------- */
+
+.loading-screen {
+  min-height: 100vh;
+  background: #0b0f19;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---------- BACKGROUND ORBS ---------- */
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.orb-1 {
+  width: 350px;
+  height: 350px;
+  background: rgba(139, 92, 246, 0.15);
+  top: -100px;
+  left: -80px;
+}
+
+.orb-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(16, 185, 129, 0.08);
+  right: -80px;
+  top: 250px;
+}
+
+/* ---------- GLASS CARD ---------- */
+
+.glass-card {
+  background: rgba(17, 24, 39, 0.72);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-radius: 22px;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+
+  transition: all 0.35s ease;
+  position: relative;
+  z-index: 5;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 12px 35px rgba(139, 92, 246, 0.12),
+    0 0 20px rgba(139, 92, 246, 0.05);
+}
+
+/* ---------- AI LOGO ---------- */
+
+.ai-logo {
+  width: 75px;
+  height: 75px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #111827 0%,
+    #1e293b 100%
+  );
+
+  border: 1px solid rgba(139, 92, 246, 0.3);
+
+  color: #a78bfa;
+
+  box-shadow:
+    0 0 20px rgba(139, 92, 246, 0.15);
+
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* ---------- HERO ---------- */
+
+.hero-title {
+  color: white;
+  font-size: 2.7rem;
+  font-weight: 800;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #a78bfa
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+   text-align: center;   /* add this */
+   width: 100%;    
+}
+
+.hero-subtitle {
+  color: #94a3b8;
+  margin-top: 10px;
+}
+
+/* ---------- TITLES ---------- */
+
+.section-title {
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+/* ---------- METRIC CARD ---------- */
+
+.metric-card {
+  text-align: center;
+}
+
+/* ---------- SKILL BADGES ---------- */
+
+.skill-badge {
+  background: #1e293b !important;
+
+  color: white !important;
+
+  border: 1px solid #374151 !important;
+
+  padding: 10px 14px !important;
+
+  border-radius: 12px !important;
+
+  font-size: 13px !important;
+
+  transition: all 0.3s ease;
+}
+
+.skill-badge:hover {
+  background: #8b5cf6 !important;
+  transform: translateY(-2px);
+}
+
+/* ---------- ACCORDION ---------- */
+
+.question-accordion {
+  background: transparent !important;
+  border: none !important;
+}
+
+.question-accordion .accordion-button {
+  background: #111827 !important;
+  color: white !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.question-accordion .accordion-body {
+  background: rgba(255, 255, 255, 0.02);
+  color: white;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ---------- VERDICT ---------- */
+
+.verdict-card {
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e293b 100%
+  );
+
+  border: 1px solid rgba(139, 92, 246, 0.25);
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict-card::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    #8b5cf6,
+    #10b981
+  );
+}
+
+/* ---------- BUTTON ---------- */
+
+.action-btn {
+  background: linear-gradient(
+    90deg,
+    #7c3aed,
+    #8b5cf6
+  ) !important;
+
+  border: none !important;
+
+  padding: 12px 22px !important;
+
+  font-weight: 600 !important;
+
+  border-radius: 999px !important;
+}
+
+/* ---------- ANIMATION ---------- */
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 10px rgba(139, 92, 246, 0.15);
+  }
+
+  50% {
+    transform: scale(1.03);
+
+    box-shadow:
+      0 0 25px rgba(139, 92, 246, 0.3);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 10px rgba(139, 92, 246, 0.15);
+  }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .glass-card {
+    padding: 18px !important;
+  }
+
+  .verdict-card {
+    padding: 25px !important;
+  }
+}
