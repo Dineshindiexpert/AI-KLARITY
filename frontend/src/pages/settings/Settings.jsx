@@ -3,7 +3,7 @@ import { Container, Tabs, Tab } from "react-bootstrap";
 import { Person, CreditCard } from "react-bootstrap-icons";
 
 import ProfileLayout from "../../components/layout/profilelayout";
-import BillingLayout from "../../components/layout/BillingLayout";
+import BillingLayout from "../../components/layout/Billinglayout";
 
 const Settings = () => {
   return (
