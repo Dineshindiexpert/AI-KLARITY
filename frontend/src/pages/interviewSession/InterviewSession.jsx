@@ -1,48 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Container,
   Row,
   Col,
   Card,
   Button,
-  ProgressBar,
   Form,
   Badge,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 
 import {
   MicFill,
-  MicMuteFill,
   ClockFill,
   BoxArrowRight,
   ArrowRight,
-  CpuFill
+  CpuFill,
 } from "react-bootstrap-icons";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { nextQuestion, finishInterview } from "../../api/interviewApi";
+import { useVoiceInterview } from "../../hooks/useVoiceInterview";
 
 const InterviewSession = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { speak, listen, stopAll } = useVoiceInterview();
 
-  // from previous page
+  // Route states from setup page
   const sessionId = location.state?.sessionId;
   const totalQuestions = location.state?.totalQuestions || 10;
 
   const [question, setQuestion] = useState(location.state?.question);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answer, setAnswer] = useState("");
-  const [isMuted, setIsMuted] = useState(true);
+  const [voiceMode, setVoiceMode] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [finishing, setFinishing] = useState(false);
-
   const [seconds, setSeconds] = useState(0);
+  const [aiStatus, setAiStatus] = useState("idle"); // 'idle' | 'speaking' | 'listening' | 'processing'
 
-  /* TIMER */
+  // Safety lock to prevent simultaneous button and background triggers
+  const isTriggeringNext = useRef(false);
 
+  /* TIMER LOGIC */
   useEffect(() => {
     const timer = setInterval(() => {
       setSeconds((prev) => prev + 1);
@@ -51,27 +53,62 @@ const InterviewSession = () => {
     return () => clearInterval(timer);
   }, []);
 
+  /* UNMOUNT CLEANUP */
+  useEffect(() => {
+    return () => {
+      stopAll();
+    };
+  }, [stopAll]);
+
+  /* STRICT CONTROLLED VOICE ROUND FLOW */
+  useEffect(() => {
+    if (voiceMode && question && !isTriggeringNext.current) {
+      runVoiceRound(question);
+    } else if (!voiceMode) {
+      stopAll();
+      setAiStatus("idle");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question, voiceMode]);
+
+  const runVoiceRound = (currentQ) => {
+    setAiStatus("speaking");
+
+    speak(currentQ.question, () => {
+      // Guard Check: ensures user didn't disable voice mode while AI was speaking
+      setAiStatus("listening");
+
+      listen((liveCapturedText) => {
+        // Stream text strictly without auto-submitting it to next question
+        setAnswer(liveCapturedText);
+      });
+    });
+  };
+
   const formatTime = () => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
-
     return `${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  /* NEXT QUESTION */
-
+  /* SINGLE MANUAL TRIGGER FOR NEXT ROUND */
   const handleNext = async () => {
-    if (!answer.trim()) {
-      alert("Please answer first");
+    if (!answer.trim() || isTriggeringNext.current) {
+      alert("Please provide or type an answer first!");
       return;
     }
 
     try {
       setLoading(true);
+      setAiStatus("processing");
+      isTriggeringNext.current = true;
+      
+      // Clear mic/audio listeners before initiating server state change
+      stopAll(); 
 
       const data = await nextQuestion({
         session_id: sessionId,
-        answer: answer
+        answer: answer.trim(),
       });
 
       if (data.is_finished) {
@@ -79,73 +116,64 @@ const InterviewSession = () => {
         return;
       }
 
+      // Reset values cleanly for next loop round
+      setAnswer("");
       setQuestion(data.question);
       setCurrentQuestion((prev) => prev + 1);
-      setAnswer("");
-
     } catch (error) {
-      console.log(error);
-      alert("Something went wrong");
+      console.log("Error loading next question:", error);
+      alert("Something went wrong. Please check your network or try again.");
     } finally {
       setLoading(false);
+      isTriggeringNext.current = false;
+      if (!voiceMode) setAiStatus("idle");
     }
   };
 
-  /* FINISH INTERVIEW */
-
+  /* END INTERVIEW ACTION */
   const handleFinish = async () => {
     try {
+      stopAll();
+      setVoiceMode(false);
+      setAiStatus("idle");
       setFinishing(true);
+      isTriggeringNext.current = true;
 
       const data = await finishInterview({
-        session_id: sessionId
+        session_id: sessionId,
       });
-
-      console.log(data);
 
       navigate("/interview/report", {
         state: {
-          report: data.report
-        }
+          report: data.report,
+        },
       });
-
     } catch (error) {
       console.log(error);
-      alert("Failed to finish interview");
+      alert("Failed to finish interview session.");
     } finally {
       setFinishing(false);
+      isTriggeringNext.current = false;
     }
   };
 
   return (
-    <div
-      className="vh-100 d-flex flex-column"
-      style={{ background: "#0B0F19" }}
-    >
-
-      {/* HEADER */}
-
+    <div className="vh-100 d-flex flex-column" style={{ background: "#0B0F19" }}>
+      {/* HEADER SECTION */}
       <div
         className="px-4 py-3 border-bottom"
         style={{
           background: "#111827",
-          borderColor: "rgba(255,255,255,.08)"
+          borderColor: "rgba(255,255,255,.08)",
         }}
       >
         <div className="d-flex justify-content-between align-items-center">
-
           <div>
-            <h5 className="text-white mb-1">
-              AI Technical Interview
-            </h5>
-
-            <small style={{ color: "#94A3B8" }}>
-              Real Interview Simulation
-            </small>
+            <h5 className="text-white mb-1">AI Technical Interview</h5>
+            <small style={{ color: "#94A3B8" }}>Real Interview Simulation</small>
           </div>
 
           <div className="d-flex align-items-center gap-4">
-
             <div className="text-white">
               <ClockFill className="me-2" color="#60A5FA" />
               {formatTime()}
@@ -159,199 +187,129 @@ const InterviewSession = () => {
               variant="outline-danger"
               size="sm"
               onClick={handleFinish}
-              disabled={finishing}
+              disabled={finishing || loading}
             >
               <BoxArrowRight className="me-2" />
               End Interview
             </Button>
-
           </div>
-
         </div>
       </div>
 
-
-      {/* BODY */}
-
+      {/* CORE FRAMEWORK BODY */}
       <Container fluid className="flex-grow-1 p-4">
         <Row className="h-100 g-4">
-
-          {/* LEFT */}
-
+          {/* INTERVIEWER PANEL (LEFT side) */}
           <Col lg={5}>
-
             <Card
               className="border-0 h-100 rounded-4 p-4"
               style={{ background: "#111827" }}
             >
-
               <div className="d-flex align-items-center gap-3 mb-4">
-
                 <div
                   className="rounded-circle d-flex align-items-center justify-content-center"
-                  style={{
-                    width: 60,
-                    height: 60,
-                    background: "#1E293B"
-                  }}
+                  style={{ width: 60, height: 60, background: "#1E293B" }}
                 >
                   <CpuFill color="#8B5CF6" size={24} />
                 </div>
 
                 <div>
-                  <h6 className="text-white mb-0">
-                    AI Interviewer
-                  </h6>
-
-                  <small style={{ color: "#34D399" }}>
-                    Listening...
+                  <h6 className="text-white mb-0">AI Interviewer</h6>
+                  <small
+                    style={{
+                      color: voiceMode ? "#F59E0B" : "#34D399",
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {voiceMode ? `🎙 Mode: ${aiStatus}` : "Text Interview Active"}
                   </small>
                 </div>
-
               </div>
-
 
               <div className="mb-4">
-
                 <Badge bg="primary" className="me-2 px-3 py-2">
-                  {question?.skill}
+                  {question?.skill || "General Topic"}
                 </Badge>
-
-                <Badge bg="warning" text="dark">
-                  Difficulty {question?.difficulty}
+                <Badge bg="warning" text="dark" className="px-3 py-2">
+                  Difficulty {question?.difficulty || "Standard"}
                 </Badge>
-
               </div>
 
-
-              <Card
-                className="border-0 rounded-4 p-4"
-                style={{ background: "#1E293B" }}
-              >
-                <small style={{ color: "#94A3B8" }}>
-                  Current Question
-                </small>
-
-                <h4
-                  className="text-white mt-3"
-                  style={{
-                    lineHeight: 1.6,
-                    fontSize: "22px"
-                  }}
-                >
-                  {question?.question}
+              <Card className="border-0 rounded-4 p-4" style={{ background: "#1E293B" }}>
+                <small style={{ color: "#94A3B8" }}>Current Question</small>
+                <h4 className="text-white mt-3" style={{ lineHeight: 1.6, fontSize: "21px" }}>
+                  {question?.question || "Awaiting question transmission..."}
                 </h4>
-
               </Card>
 
+              <Button
+                className="mt-4 py-2"
+                variant={voiceMode ? "danger" : "success"}
+                disabled={loading || finishing}
+                onClick={() => setVoiceMode(!voiceMode)}
+              >
+                {voiceMode ? "🛑 Switch to Keyboard Mode" : "🎤 Turn On Voice Assistant"}
+              </Button>
             </Card>
-
           </Col>
 
-
-          {/* RIGHT */}
-
+          {/* CANDIDATE RESPONSES (RIGHT side) */}
           <Col lg={7}>
-
             <Card
               className="border-0 h-100 rounded-4 p-4"
               style={{ background: "#111827" }}
             >
-
-              <h5 className="text-white mb-3">
-                Your Answer
-              </h5>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h5 className="text-white mb-0">Your Answer Workspace</h5>
+                {aiStatus === "listening" && (
+                  <Badge bg="danger" className="px-3 py-2 border-0">
+                    <MicFill className="me-1" /> Mic Is Live... Speak Freely
+                  </Badge>
+                )}
+              </div>
 
               <Form.Control
                 as="textarea"
-                rows={13}
+                rows={12}
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Answer like a real interview..."
-                className="border-0 shadow-none rounded-4 p-4"
+                placeholder={
+                  voiceMode
+                    ? "AI is speaking... Once it finishes, mic turns on automatically. Speak, pause, think, and hit Submit below."
+                    : "Type your thorough conceptual answer here..."
+                }
                 style={{
                   background: "#1E293B",
-                  color: "white",
-                  resize: "none"
+                  color: "#fff",
+                  border: "1px solid #334155",
+                  resize: "none",
+                  fontSize: "16px",
                 }}
+                disabled={loading || aiStatus === "speaking"}
               />
 
-              <div className="mt-4 d-flex justify-content-between align-items-center">
-
+              <div className="d-flex justify-content-end mt-4">
                 <Button
-                  variant="dark"
-                  onClick={() => setIsMuted(!isMuted)}
-                >
-                  {isMuted ? (
-                    <>
-                      <MicMuteFill className="me-2" />
-                      Mic Off
-                    </>
-                  ) : (
-                    <>
-                      <MicFill className="me-2" />
-                      Mic On
-                    </>
-                  )}
-                </Button>
-
-                <small style={{ color: "#94A3B8" }}>
-                  {answer.length} chars
-                </small>
-
-                <Button
+                  variant="primary"
+                  size="lg"
+                  className="px-5 py-2"
                   onClick={handleNext}
-                  disabled={loading}
-                  className="border-0 px-4"
-                  style={{
-                    background:
-                      "linear-gradient(90deg,#7C3AED,#8B5CF6)"
-                  }}
+                  disabled={loading || !answer.trim() || aiStatus === "speaking"}
                 >
                   {loading ? (
-                    <Spinner size="sm" />
+                    <Spinner animation="border" size="sm" />
                   ) : (
                     <>
-                      Next Question
-                      <ArrowRight className="ms-2" />
+                      Submit Answer & Next <ArrowRight className="ms-2" />
                     </>
                   )}
                 </Button>
-
               </div>
-
             </Card>
-
           </Col>
-
         </Row>
       </Container>
-
-
-      {/* FOOTER */}
-
-      <div
-        className="px-4 py-3"
-        style={{ background: "#111827" }}
-      >
-
-        <ProgressBar
-          now={(currentQuestion / totalQuestions) * 100}
-          style={{ height: "8px" }}
-        />
-
-        <div
-          className="mt-2"
-          style={{
-            color: "#94A3B8",
-            fontSize: "14px"
-          }}
-        >
-          Progress {currentQuestion} / {totalQuestions}
-        </div>
-
-      </div>
-
     </div>
   );
 };

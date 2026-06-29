@@ -4,63 +4,49 @@ import { Eye, EyeSlash, Github, Google } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { loginUser } from "../../api/authApi";
-import {Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [email, setEmail] =
-    useState("");
+  const [email, setEmail] = useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] = useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-
   const handleLogin = async (e) => {
-
     e.preventDefault();
 
     try {
-
       setLoading(true);
 
-      const response =
-        await loginUser({
-          email,
-          password
-        });
+      const response = await loginUser({ email, password });
 
-      localStorage.setItem(
-        "token",
-        response.access_token
-      );
+      console.log("LOGIN RESPONSE:", response);
+
+      const data = response?.data || response;
+
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       navigate("/");
 
+      navigate("/");
     } catch (error) {
-
       console.log(error);
-
       alert("Invalid credentials");
-
     } finally {
       setLoading(false);
     }
   };
 
-
-
   return (
     <div className="login-page">
       <Container fluid className="h-100">
         <Row className="h-100">
-
           {/* Left Side */}
           <Col lg={6} className="left-panel">
             <div className="logo-area">
@@ -73,8 +59,8 @@ const Login = () => {
             </h1>
 
             <p className="hero-text">
-              Track your growth, analyze your resumes,
-              and practice with real-time AI evaluation.
+              Track your growth, analyze your resumes, and practice with
+              real-time AI evaluation.
             </p>
 
             <ul className="feature-list">
@@ -101,10 +87,7 @@ const Login = () => {
           {/* Right Side */}
           <Col lg={6} className="right-panel">
             <div className="login-box">
-
-              <h1 className="fw-bold text-white mb-2">
-                Welcome back
-              </h1>
+              <h1 className="fw-bold text-white mb-2">Welcome back</h1>
 
               <p className="text-secondary">
                 Don't have an account?
@@ -134,15 +117,12 @@ const Login = () => {
               </div>
 
               <Form>
-
                 <Form.Control
                   type="email"
                   placeholder="dinesh@email.com"
                   className="custom-input"
                   value={email}
-                  onChange={(e) =>
-                    setEmail(e.target.value)
-                  }
+                  onChange={(e) => setEmail(e.target.value)}
                 />
 
                 <Form.Group className="mb-4">
@@ -156,24 +136,12 @@ const Login = () => {
 
                   <div className="position-relative">
                     <Form.Control
-                      type={
-                        showPassword
-                          ? "text"
-                          : "password"
-                      }
-
+                      type={showPassword ? "text" : "password"}
                       placeholder="Enter password"
-
                       className="custom-input"
-
                       value={password}
-
-                      onChange={(e) =>
-                        setPassword(e.target.value)
-                      }
+                      onChange={(e) => setPassword(e.target.value)}
                     />
-
-
                   </div>
                 </Form.Group>
 
@@ -187,22 +155,14 @@ const Login = () => {
                   onClick={handleLogin}
                   disabled={loading}
                 >
-
-                  {
-                    loading
-                      ? "Signing In..."
-                      : "Sign In to Dashboard"
-                  }
-
+                  {loading ? "Signing In..." : "Sign In to Dashboard"}
                 </Button>
-
               </Form>
 
               <p className="footer-text">
-                By signing in, you agree to our Terms of
-                Service and Privacy Policy
+                By signing in, you agree to our Terms of Service and Privacy
+                Policy
               </p>
-
             </div>
           </Col>
         </Row>
