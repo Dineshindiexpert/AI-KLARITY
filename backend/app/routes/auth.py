@@ -4,6 +4,9 @@ from app.database.db import db
 from app.utils.password import hash_password, verify_password
 from app.utils.jwt_handler import create_access_token
 
+from fastapi import APIRouter, UploadFile, File
+import cloudinary.uploader
+
 router = APIRouter()
 
 
@@ -36,6 +39,13 @@ async def register(user: UserRegister):
         "message": "User registered successfully",
         "user_id": str(result.inserted_id)
     }
+    
+    
+#========================
+# FOR THE INSERT AVATAR
+#========================
+
+
 
 
 # =========================
@@ -48,11 +58,16 @@ async def login(user: UserLogin):
         "email": user.email
     })
 
+    # ✅ FIRST CHECK (IMPORTANT)
     if not db_user:
         raise HTTPException(
             status_code=401,
             detail="Invalid credentials"
         )
+
+    print("INPUT PASSWORD:", user.password)
+    print("DB HASH:", db_user["password"])
+    print("VERIFY RESULT:", verify_password(user.password, db_user["password"]))
 
     password_match = verify_password(
         user.password,
@@ -77,6 +92,8 @@ async def login(user: UserLogin):
         "user": {
             "id": str(db_user["_id"]),
             "name": db_user["name"],
-            "email": db_user["email"]
+            "email": db_user["email"],
+            "avatar" :db_user["avatar"]
         }
     }
+ 

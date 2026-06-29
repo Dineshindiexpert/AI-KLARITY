@@ -5,6 +5,7 @@ from app.routes import users
 from app.routes import test
 from app.routes import interview
 from fastapi.middleware.cors import CORSMiddleware
+from app.core import cloudinary
 
 app = FastAPI(
     title="AI Klarity API",

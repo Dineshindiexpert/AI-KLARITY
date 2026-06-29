@@ -10,8 +10,11 @@ from app.database.db import sessions_collection
 
 router = APIRouter()
 
-
+# =================
 # START INTERVIEW
+# =================
+
+
 @router.post("/start")
 async def start_interview(
     payload: InterviewStartRequest,
@@ -22,6 +25,10 @@ async def start_interview(
         payload.job_role,
         payload.skills
     )
+
+# =======================
+#  for teh next question
+# =======================
 
 
 @router.post("/next")
@@ -55,34 +62,39 @@ async def finish(
         payload.session_id
     )
     
-    
+# ===========================
+# for the interview routes
+# ============================   
     
   
 @router.get("/latest-report")
-async def get_latest_session_report(current_user=Depends(get_current_user)):
-    # 1. इस लॉगिन यूजर के सेशन्स ढूंढो और सबसे नया वाला पहले लाओ
-    cursor = sessions_collection.find({
-        "user_id": current_user["user_id"]
-    }).sort("_id", -1) # DESCENDING के लिए सीधे -1 लिख सकते हो भाई
-    
-    # 2. लिस्ट में से सिर्फ सबसे पहला डॉक्यूमेंट निकालो
-    latest_sessions = await cursor.to_list(length=1)
-    
-    # 3. अगर कोई इंटरव्यू नहीं मिला
-    if not latest_sessions:
+async def get_latest_session_report(
+    current_user=Depends(get_current_user)
+):
+
+    latest_session = await sessions_collection.find(
+        {
+            "user_id": current_user["user_id"],
+            "report": {"$exists": True},
+            "status": "completed"
+        }
+    ).sort("completed_at", -1).to_list(length=1)
+
+    if not latest_session:
         raise HTTPException(
-            status_code=404, 
-            detail="इस यूजर का कोई इंटरव्यू सेशन नहीं मिला।"
+            status_code=404,
+            detail="No report found"
         )
-        
-    latest_session = latest_sessions[0]
-    
-    # 4. _id को स्ट्रिंग बनाओ ताकि फ्रंटएंड क्रैश न हो
-    latest_session["_id"] = str(latest_session["_id"])
-    
-    return latest_session
+
+    session = latest_session[0]
+    session["_id"] = str(session["_id"])
+
+    return session
 
 
+# ============================
+# for the analytics reprots 
+# ============================
 
 @router.get("/dashboard/analytics")
 async def get_dashboard_analytics(current_user=Depends(get_current_user)):
@@ -116,7 +128,7 @@ async def get_dashboard_analytics(current_user=Depends(get_current_user)):
             "score": score
         })
 
-        # ✅ FIX: skills must be inside loop
+        #  FIX: skills must be inside loop
         skills = session.get("skills") or []
 
         for j, value in enumerate(skills):
