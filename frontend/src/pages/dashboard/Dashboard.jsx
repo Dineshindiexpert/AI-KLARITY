@@ -29,6 +29,7 @@ import GradientBtn from "../../components/buttons/gradientbtn";
 
 import { getResume } from "../../api/resumeApi";
 import { getDashboardAnalytics } from "../../api/interviewApi";
+import { toast } from "react-toastify";
 
 const cardStyle = {
   background: "rgba(22, 31, 48, 0.75)",
@@ -67,7 +68,7 @@ const Dashboard = () => {
 
       // STEP 1: upload
       const uploadResponse = await uploadResume(file);
-      console.log("UPLOAD RESPONSE:", uploadResponse);
+      
 
       const resumeId =
         uploadResponse?.resume_id ||
@@ -80,13 +81,14 @@ const Dashboard = () => {
 
       // STEP 2: analyze
       const result = await analyzeResume(resumeId);
-      console.log("ANALYSIS:", result);
+     
 
       setAnalysisData(result);
       setIsAnalyzed(true);
     } catch (error) {
-      console.log("UPLOAD ERROR:", error);
-      alert(error.message || "Resume upload failed");
+      
+      toast.error(error.message || "Resume upload failed")
+       
     } finally {
       setLoading(false);
     }

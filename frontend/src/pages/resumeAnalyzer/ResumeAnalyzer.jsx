@@ -4,6 +4,7 @@ import { Container, Card, Button } from "react-bootstrap";
 import { Cpu, Upload, CheckCircle, CheckCircleFill, FileText, GraphUp } from "react-bootstrap-icons";
 import { uploadResume, analyzeResume } from "../../api/resumeApi";
 import CircularProgress from '../../components/Progressbar';
+import { toast } from "react-toastify";
 
 const ResumeAnalyzer = () => {
 
@@ -29,9 +30,9 @@ const ResumeAnalyzer = () => {
 
       // STEP 1: upload
       const uploadResponse = await uploadResume(file);
-      console.log("UPLOAD RESPONSE:", uploadResponse);
+      
 
-      // 🔥 SAFE EXTRACTION (MOST IMPORTANT FIX)
+      // SAFE EXTRACTION (MOST IMPORTANT FIX)
       const resumeId =
         uploadResponse?.resume_id ||
         uploadResponse?.data?.resume_id ||
@@ -43,14 +44,15 @@ const ResumeAnalyzer = () => {
 
       // STEP 2: analyze
       const result = await analyzeResume(resumeId);
-      console.log("ANALYSIS:", result);
+      
 
       setAnalysisData(result);
       setIsAnalyzed(true);
 
     } catch (error) {
-      console.log("UPLOAD ERROR:", error);
-      alert(error.message || "Resume upload failed");
+
+      toast.error(error.message || "Resume upload failed")
+     
     } finally {
       setLoading(false);
     }
@@ -60,7 +62,7 @@ const ResumeAnalyzer = () => {
   const [activeRoadmapTab, setActiveRoadmapTab] = useState(0);
 
  
-  const hireability = analysisData?.analysis?.hireability || "Medium";
+  const hireability = analysisData?.analysis?.hireability || "not analyse";
   const summary = analysisData?.analysis?.summary || "";
   const skills = analysisData?.skills || [];
   const suggestedRoles = analysisData?.suggested_roles || [];

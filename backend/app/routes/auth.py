@@ -29,7 +29,9 @@ async def register(user: UserRegister):
     new_user = {
         "name": user.name,
         "email": user.email,
-        "password": hash_password(user.password)
+        "password": hash_password(user.password),
+        "avatar": None,
+        "avatar_public_id": None
     }
 
     result = await db.users.insert_one(new_user)
@@ -93,7 +95,7 @@ async def login(user: UserLogin):
             "id": str(db_user["_id"]),
             "name": db_user["name"],
             "email": db_user["email"],
-            "avatar" :db_user["avatar"]
+            "avatar": db_user.get("avatar", None)
         }
     }
  

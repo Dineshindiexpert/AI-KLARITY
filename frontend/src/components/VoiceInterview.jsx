@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const VoiceInterview = () => {
   const [question] = useState(
@@ -73,7 +74,8 @@ const VoiceInterview = () => {
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Browser does not support Speech Recognition");
+      toast.error("Browser does not support Speech Recognition")
+      
       return;
     }
 

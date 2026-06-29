@@ -1,4 +1,5 @@
 import { useRef, useCallback } from "react";
+import { toast } from "react-toastify";
 
 export const useVoiceInterview = () => {
   const recognitionRef = useRef(null);
@@ -44,7 +45,7 @@ export const useVoiceInterview = () => {
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Speech Recognition is not supported in this browser. Use Chrome/Edge.");
+      toast.error("Speech Recognition is not supported in this browser. Use Chrome/Edge.");
       return;
     }
 

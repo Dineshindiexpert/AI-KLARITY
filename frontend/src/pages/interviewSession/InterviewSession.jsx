@@ -1,26 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Form,
-  Badge,
-  Spinner,
-} from "react-bootstrap";
+import {Container,Row,Col,Card,Button,Form,Badge,Spinner,} from "react-bootstrap";
 
-import {
-  MicFill,
-  ClockFill,
-  BoxArrowRight,
-  ArrowRight,
-  CpuFill,
-} from "react-bootstrap-icons";
+import {MicFill,ClockFill,BoxArrowRight,ArrowRight,CpuFill,} from "react-bootstrap-icons";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { nextQuestion, finishInterview } from "../../api/interviewApi";
 import { useVoiceInterview } from "../../hooks/useVoiceInterview";
+import { toast } from "react-toastify";
 
 const InterviewSession = () => {
   const navigate = useNavigate();
@@ -94,7 +80,8 @@ const InterviewSession = () => {
   /* SINGLE MANUAL TRIGGER FOR NEXT ROUND */
   const handleNext = async () => {
     if (!answer.trim() || isTriggeringNext.current) {
-      alert("Please provide or type an answer first!");
+      toast.error("Please provide or type an answer first!")
+      
       return;
     }
 
@@ -122,7 +109,8 @@ const InterviewSession = () => {
       setCurrentQuestion((prev) => prev + 1);
     } catch (error) {
       console.log("Error loading next question:", error);
-      alert("Something went wrong. Please check your network or try again.");
+      toast.error("Something went wrong. Please check your network or try again.")
+      
     } finally {
       setLoading(false);
       isTriggeringNext.current = false;
@@ -150,7 +138,8 @@ const InterviewSession = () => {
       });
     } catch (error) {
       console.log(error);
-      alert("Failed to finish interview session.");
+      toast.error("Failed to finish interview session.")
+     
     } finally {
       setFinishing(false);
       isTriggeringNext.current = false;

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { loginUser } from "../../api/authApi";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Brain } from "lucide-react";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,8 +27,6 @@ const Login = () => {
 
       const response = await loginUser({ email, password });
 
-      console.log("LOGIN RESPONSE:", response);
-
       const data = response?.data || response;
 
       localStorage.setItem("token", data.access_token);
@@ -36,8 +36,7 @@ const Login = () => {
 
       navigate("/");
     } catch (error) {
-      console.log(error);
-      alert("Invalid credentials");
+      toast.error("Invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -50,7 +49,7 @@ const Login = () => {
           {/* Left Side */}
           <Col lg={6} className="left-panel">
             <div className="logo-area">
-              <div className="logo-box">🧠</div>
+              <div className="logo-box"><Brain/></div>
               <h2>AI Klarity</h2>
             </div>
 
@@ -142,6 +141,13 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      className="eye-btn"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeSlash /> : <Eye />}
+                    </button>
                   </div>
                 </Form.Group>
 

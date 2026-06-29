@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { TrendingUp, Calendar } from "lucide-react";
-import {LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer,RadarChart,PolarGrid,PolarAngleAxis,PolarRadiusAxis,Radar,} from "recharts";
+import {LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer,PolarGrid,PolarAngleAxis,PolarRadiusAxis,Radar,} from "recharts";
 import { getDashboardAnalytics } from "../../api/interviewApi";
 
  
@@ -13,13 +13,7 @@ const skillsProgress = [
   { label: "Core Role Alignment", percentage: 73, color: "#F59E0B" },
 ];
 
-const radarData = [
-  { skill: "System Design", value: 75, fullMark: 100 },
-  { skill: "Problem Solving", value: 82, fullMark: 100 },
-  { skill: "Coding Speed", value: 68, fullMark: 100 },
-  { skill: "Edge-Case Handling", value: 71, fullMark: 100 },
-  { skill: "Behavioral Frameworks", value: 79, fullMark: 100 },
-];
+ 
 
 const s = {
   page: {
@@ -74,12 +68,7 @@ const s = {
     borderRadius: 21,
     padding: "1.5rem",
   },
-  radarItemCard: {
-    backgroundColor: "rgba(11,15,25,0.5)",
-    border: "1px solid rgba(255,255,255,0.05)",
-    borderRadius: 16,
-    padding: "0.75rem",
-  },
+   
 };
 
 const GrowthAnalytic = () => {
@@ -394,86 +383,8 @@ const GrowthAnalytic = () => {
             </div>
           </div>
 
-          {/* Radar Chart */}
-          <div className="col-12 col-lg-6">
-            <div className="p-4 p-lg-5 h-100" style={s.card}>
-              <h2
-                style={{ color: "#fff", fontSize: "1.25rem", fontWeight: 600 }}
-                className="mb-1"
-              >
-                Advanced AI Skill Breakdown
-              </h2>
-              <p
-                style={{ color: "#9CA3AF", fontSize: "0.875rem" }}
-                className="mb-4"
-              >
-                Multi-angle technical competency analysis
-              </p>
-
-              <ResponsiveContainer width="100%" height={320}>
-                <RadarChart data={radarData}>
-                  <defs>
-                    <linearGradient
-                      id="radarGradient"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="#7C3AED" stopOpacity={0.8} />
-                      <stop
-                        offset="100%"
-                        stopColor="#10B981"
-                        stopOpacity={0.3}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <PolarGrid stroke="rgba(255,255,255,0.1)" />
-                  <PolarAngleAxis
-                    dataKey="skill"
-                    tick={{ fill: "#E5E7EB", fontSize: 12 }}
-                  />
-                  <PolarRadiusAxis
-                    angle={90}
-                    domain={[0, 100]}
-                    tick={{ fill: "#9CA3AF", fontSize: 11 }}
-                  />
-                  <Radar
-                    name="Skill Level"
-                    dataKey="value"
-                    stroke="#7C3AED"
-                    fill="url(#radarGradient)"
-                    fillOpacity={0.6}
-                    strokeWidth={3}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-
-              <div className="row g-3 mt-2">
-                {radarData.map((item) => (
-                  <div key={item.skill} className="col-6">
-                    <div style={s.radarItemCard}>
-                      <div
-                        style={{ color: "#9CA3AF", fontSize: "0.75rem" }}
-                        className="mb-1"
-                      >
-                        {item.skill}
-                      </div>
-                      <div
-                        style={{
-                          color: "#fff",
-                          fontSize: "1.125rem",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {item.value}/100
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        
+          
         </div>
       </div>
     </div>

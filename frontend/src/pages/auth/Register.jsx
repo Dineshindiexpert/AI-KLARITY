@@ -4,6 +4,7 @@ import { Eye, EyeSlash, Github, Google } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../api/authApi";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,10 +12,17 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      
+      return;
+    }
 
     try {
       setLoading(true);
@@ -22,16 +30,16 @@ const Register = () => {
       await registerUser({
         name,
         email,
-        password
+        password,
       });
 
-      alert("Account created successfully");
+      toast.success("Account created successfully");
 
       navigate("/signin");
-
     } catch (error) {
       console.log(error);
-      alert("Registration failed");
+      toast.error("Registration failed")
+      
     } finally {
       setLoading(false);
     }
@@ -41,7 +49,6 @@ const Register = () => {
     <div className="login-page">
       <Container fluid className="h-100">
         <Row className="h-100">
-
           {/* Left Side */}
           <Col lg={6} className="left-panel">
             <div className="logo-area">
@@ -54,8 +61,8 @@ const Register = () => {
             </h1>
 
             <p className="hero-text">
-              Track your growth, analyze your resumes,
-              and practice with real-time AI evaluation.
+              Track your growth, analyze your resumes, and practice with
+              real-time AI evaluation.
             </p>
 
             <ul className="feature-list">
@@ -82,15 +89,12 @@ const Register = () => {
           {/* Right Side */}
           <Col lg={6} className="right-panel">
             <div className="login-box">
-
-              <h1 className="fw-bold text-white mb-2">
-                Welcome back
-              </h1>
+              <h1 className="fw-bold text-white mb-2">Welcome back</h1>
 
               <p className="text-secondary">
                 Don't have an account?
-                <Link to="/register" className="signup-link">
-                  Sign up
+                <Link to="/signin" className="signup-link">
+                  Sign in
                 </Link>
               </p>
 
@@ -126,8 +130,6 @@ const Register = () => {
                   />
                 </Form.Group>
 
-
-
                 <Form.Group className="mb-4">
                   <Form.Label>Email Address</Form.Label>
                   <Form.Control
@@ -140,35 +142,45 @@ const Register = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-4">
-                  <div className="d-flex justify-content-between">
-                    <Form.Label>Password</Form.Label>
-
-                    <a href="/" className="forgot-link">
-                      Forgot Password?
-                    </a>
-                  </div>
-
                   <div className="position-relative">
                     <Form.Control
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"
                       className="custom-input"
-
                       value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
 
-                      onChange={(e) =>
-                        setPassword(e.target.value)
-                      }
+                    <button
+                      type="button"
+                      className="eye-btn"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeSlash /> : <Eye />}
+                    </button>
+                  </div>
+                </Form.Group>
+
+                {/* CONFIRM PASSWORD */}
+
+                <Form.Group className="mb-4">
+                  <div className="position-relative">
+                    <Form.Control
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm password"
+                      className="custom-input"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
                     <button
                       type="button"
                       className="eye-btn"
                       onClick={() =>
-                        setShowPassword(!showPassword)
+                        setShowConfirmPassword(!showConfirmPassword)
                       }
                     >
-                      {showPassword ? <EyeSlash /> : <Eye />}
+                      {showConfirmPassword ? <EyeSlash /> : <Eye />}
                     </button>
                   </div>
                 </Form.Group>
@@ -196,14 +208,12 @@ const Register = () => {
                 >
                   {loading ? "Creating..." : "Create Account"}
                 </Button>
-
               </Form>
 
               <p className="footer-text">
-                By creating an account, you agree to our Terms of
-                Service and Privacy Policy
+                By creating an account, you agree to our Terms of Service and
+                Privacy Policy
               </p>
-
             </div>
           </Col>
         </Row>

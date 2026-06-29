@@ -29,8 +29,7 @@ const InterviewReport = () => {
 
       const response = await getLatestReport();
 
-      console.log("LIVE REPORT:", response);
-
+       
       if (response) {
         setReportData(response);
       }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Form } from "react-bootstrap";
 import GradientBtn from "../../components/buttons/gradientbtn";
 import { uploadAvatar } from "../../api/authApi";
+import { toast } from "react-toastify";
 
 const ProfileLayout = () => {
   const [profile, setProfile] = useState({
@@ -82,11 +83,12 @@ const ProfileLayout = () => {
           avatar: newAvatar,
         }),
       );
-
-      alert("Avatar uploaded successfully!");
+      toast.success("Avatar uploaded successfully!")
+       
     } catch (err) {
       console.error("Upload error details:", err);
-      alert("Image upload failed!");
+      toast.error("Image upload failed!")
+      
     } finally {
       setLoading(false);
     }
@@ -108,7 +110,8 @@ const ProfileLayout = () => {
         profile.new_password &&
         profile.new_password !== profile.confirm_password
       ) {
-        alert("Password mismatch!");
+        toast.error("Password mismatch!")
+         
         return;
       }
 
@@ -125,10 +128,10 @@ const ProfileLayout = () => {
         }),
       );
 
-      alert("Profile updated successfully");
+      toast.success("Profile updated successfully");
     } catch (err) {
       console.log(err);
-      alert("Something went wrong");
+      toast.success("Something went wrong");
     } finally {
       setLoading(false);
     }
