@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Spinner, Button } from "react-bootstrap";
-import {
-  CpuFill,
-  ChatLeftTextFill,
-  AwardFill,
-  Check2Circle,
-  ArrowClockwise
-} from "react-bootstrap-icons";
+import {CpuFill,ChatLeftTextFill,AwardFill,Check2Circle,ArrowClockwise} from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
 import { getLatestReport } from "../../api/interviewApi";

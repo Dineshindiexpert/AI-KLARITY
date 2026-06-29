@@ -11,6 +11,7 @@ import Notfound from '../pages/notfound/notfound'
 import Register from "../pages/auth/Register";
 import InterviewLanding from "../pages/interviewSession/InterviewLanding";
 import InterviewReport from '../pages/interviewSession/InterviewReport';
+import VoiceInterview from "../components/VoiceInterview";
 
 export const routes = createBrowserRouter([
 
@@ -38,7 +39,8 @@ export const routes = createBrowserRouter([
       { path: "interview/live", element: <InterviewSession /> },
       { path: "resumeAnalyzer", element: <ResumeAnalyzer /> },
       { path: "setting", element: <Settings /> },
-      {path: "interview/report", element :<InterviewReport/>}
+      {path: "interview/report", element :<InterviewReport/>},
+      {path:"/vocie-interview", element:<VoiceInterview/>}
     ]
   },
 

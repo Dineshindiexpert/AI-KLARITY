@@ -1,148 +1,269 @@
-import React from 'react'
-import { Card, Row, Col, Form } from 'react-bootstrap'
-import { Shield, Upload } from "react-bootstrap-icons";
+import React, { useEffect, useState } from "react";
+import { Card, Row, Col, Form } from "react-bootstrap";
 import GradientBtn from "../../components/buttons/gradientbtn";
-
+import { uploadAvatar } from "../../api/authApi";
 
 const ProfileLayout = () => {
+  const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    avatar: "",
+    old_password: "",
+    new_password: "",
+    confirm_password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  // Load user from localStorage
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      setProfile((prev) => ({
+        ...prev,
+        name: user.name || "",
+        email: user.email || "",
+        avatar: user.avatar || "",
+      }));
+    }
+
+    console.log("LOCAL USER =", user);
+  }, []);
+
+  const handleChange = (e) => {
+    setProfile((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  // Upload avatar
+  // Upload avatar
+  const handleImageChange = async (e) => {
+    // 🔴 FIX 1: Index [0] lagana zaruri hai file access karne ke liye
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Instant local UI preview (Optional but great for speed)
+    const previewUrl = URL.createObjectURL(file);
+    setProfile((prev) => ({
+      ...prev,
+      avatar: previewUrl,
+    }));
+
+    try {
+      setLoading(true);
+
+      // API call trigger
+      const res = await uploadAvatar(file);
+      console.log("UPLOAD RESPONSE FROM BACKEND =", res);
+
+      // 🔴 FIX 2: Aapka function already `res.data` return kar raha hai
+      // Toh aapko direct `res.url` check karna hai (res.data.url nahi)
+      const newAvatar = res?.url;
+
+      if (!newAvatar) {
+        throw new Error("Server response me secure_url nahi mila!");
+      }
+
+      // Permanent state update with Cloudinary URL
+      setProfile((prev) => ({
+        ...prev,
+        avatar: newAvatar,
+      }));
+
+      // LocalStorage sync
+      const oldUser = JSON.parse(localStorage.getItem("user"));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...oldUser,
+          avatar: newAvatar,
+        }),
+      );
+
+      alert("Avatar uploaded successfully!");
+    } catch (err) {
+      console.error("Upload error details:", err);
+      alert("Image upload failed!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initials = profile.name?.trim()
+    ? profile.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    : "U";
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+
+      if (
+        profile.new_password &&
+        profile.new_password !== profile.confirm_password
+      ) {
+        alert("Password mismatch!");
+        return;
+      }
+
+      // later API call here
+      const oldUser = JSON.parse(localStorage.getItem("user"));
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...oldUser,
+          name: profile.name,
+          email: profile.email,
+          avatar: profile.avatar,
+        }),
+      );
+
+      alert("Profile updated successfully");
+    } catch (err) {
+      console.log(err);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-          <Card
-          style={{
-            background: "#0F172A",
-            border: "1px solid #1E293B",
-            borderRadius: "24px",
-          }}
-        >
-          <Card.Body className="p-5">
-            <h3 className="fw-bold mb-5 text-white">Profile Information</h3>
+    <Card
+      style={{
+        background: "#0F172A",
+        border: "1px solid #1E293B",
+        borderRadius: "24px",
+      }}
+    >
+      <Card.Body className="p-5">
+        <h3 className="fw-bold mb-5 text-white">Profile Information</h3>
 
-            <Row>
-              {/* Left Side */}
-              <Col lg={4} className="text-center mb-4">
-                <div
-                  className="mx-auto mb-4 d-flex align-items-center justify-content-center"
-                  style={{
-                    width: "140px",
-                    height: "140px",
-                    borderRadius: "50%",
-                    background:
-                      "linear-gradient(135deg,#7C3AED,#38BDF8)",
-                    fontSize: "48px",
-                    fontWeight: "700",
-                  }}
-                >
-                  DN
-                </div>
+        <Row>
+          {/* LEFT SIDE */}
+          <Col lg={4} className="text-center mb-4">
+            {profile.avatar ? (
+              <img
+                src={profile.avatar}
+                alt="avatar"
+                className="d-block mx-auto"
+                style={{
+                  width: "140px",
+                  height: "140px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "3px solid #7C3AED",
+                  marginBottom: "15px",
+                }}
+              />
+            ) : (
+              <div
+                className="mx-auto mb-3 d-flex align-items-center justify-content-center text-white"
+                style={{
+                  width: "140px",
+                  height: "140px",
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg,#7C3AED,#38BDF8)",
+                  fontSize: "42px",
+                  fontWeight: "700",
+                }}
+              >
+                {initials}
+              </div>
+            )}
 
-                <h5
-                  style={{
-                    color: "#7C3AED",
-                    cursor: "pointer",
-                  }}
-                >
-                  Upload New Photo
-                </h5>
+            <label
+              className="d-block mt-2"
+              style={{ color: "#7C3AED", cursor: "pointer" }}
+            >
+              Upload New Photo
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleImageChange}
+              />
+            </label>
 
-                <small className="text-secondary">
-                  JPG, PNG (max 5MB)
-                </small>
-              </Col>
+            <small className="text-secondary d-block">JPG, PNG (max 5MB)</small>
+          </Col>
 
-              {/* Right Side */}
-              <Col lg={8}>
-                <Form>
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-semibold text-white">
-                      Full Name
-                    </Form.Label>
+          {/* RIGHT SIDE */}
+          <Col lg={8}>
+            <Form>
+              <Form.Control
+                name="name"
+                value={profile.name}
+                onChange={handleChange}
+                style={inputStyle}
+                className="mb-3"
+                placeholder="Full Name"
+              />
 
-                    <Form.Control
-                      type="text"
-                      defaultValue="Dinesh"
-                      style={{
-                        background: "#020617",
-                        border: "none",
-                        color: "#fff",
-                        padding: "14px",
-                        borderRadius: "16px",
-                      }}
-                    />
-                  </Form.Group>
+              <Form.Control
+                name="email"
+                value={profile.email}
+                onChange={handleChange}
+                style={inputStyle}
+                className="mb-3"
+                placeholder="Email"
+              />
 
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-semibold text-white mb-2">
-                      Contact Email
-                    </Form.Label>
+              <Form.Control
+                type="password"
+                name="old_password"
+                placeholder="Old Password"
+                value={profile.old_password}
+                onChange={handleChange}
+                style={inputStyle}
+                className="mb-3"
+              />
 
-                    <Form.Control
-                      type="email"
-                      defaultValue="dinesh@email.com"
-                      style={{
-                        background: "#020617",
-                        border: "none",
-                        color: "#fff",
-                        padding: "14px",
-                        borderRadius: "16px",
-                      }}
-                    />
-                  </Form.Group>
+              <Form.Control
+                type="password"
+                name="new_password"
+                placeholder="New Password"
+                value={profile.new_password}
+                onChange={handleChange}
+                style={inputStyle}
+                className="mb-3"
+              />
 
-                  {/* Upload Section */}
-                  <div className="mb-4">
-                    <p className="fw-semibold text-white mb-3">
-                      <Shield
-                        className="me-2 text-success"
-                        size={18}
-                      />
-                      Government ID Verification (Optional)
-                    </p>
+              <Form.Control
+                type="password"
+                name="confirm_password"
+                placeholder="Confirm Password"
+                value={profile.confirm_password}
+                onChange={handleChange}
+                style={inputStyle}
+                className="mb-3"
+              />
 
-                    <div
-                      className="text-center"
-                      style={{
-                        border: "2px dashed #7C3AED",
-                        borderRadius: "20px",
-                        padding: "50px 20px",
-                        background: "#020617",
-                      }}
-                    >
-                      <Upload
-                        size={45}
-                        className="mb-3"
-                        color="#7C3AED"
-                      />
+              <div className="d-flex justify-content-end">
+                <GradientBtn onClick={handleSave} disabled={loading}>
+                  {loading ? "Saving..." : "Save Changes"}
+                </GradientBtn>
+              </div>
+            </Form>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+  );
+};
 
-                      <h5 className="fw-bold text-white mb-2">
-                        Upload Government ID / Verification Proof
-                      </h5>
-
-                      <p className="text-secondary mb-0">
-                        Drag & Drop or Click to Browse
-                        (PDF, JPEG)
-                      </p>
-                    </div>
-                  </div>
-
-                  <hr
-                    style={{
-                      borderColor: "#1E293B",
-                    }}
-                  />
-
-                  <div className="d-flex justify-content-end">
-                   <GradientBtn>
-                    save changes
-                   </GradientBtn>
-                  </div>
-                </Form>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      
-    </div>
-  )
-}
+const inputStyle = {
+  background: "#020617",
+  border: "1px solid #1E293B",
+  color: "#fff",
+  padding: "14px",
+  borderRadius: "16px",
+};
 
 export default ProfileLayout;

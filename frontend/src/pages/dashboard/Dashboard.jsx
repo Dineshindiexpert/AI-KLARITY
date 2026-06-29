@@ -49,7 +49,7 @@ const Dashboard = () => {
         const uploadResponse = await uploadResume(file);
         console.log("UPLOAD RESPONSE:", uploadResponse);
   
-        // 🔥 SAFE EXTRACTION (MOST IMPORTANT FIX)
+        
         const resumeId =
           uploadResponse?.resume_id ||
           uploadResponse?.data?.resume_id ||
@@ -232,7 +232,7 @@ const Dashboard = () => {
               <p className="text-secondary mt-3 mb-1">Overall Improvement</p>
 
               <h1 className="text-white fw-bold">
-                +{dashboard?.improvement ?? 0}%
+                {dashboard?.improvement ?? 0}%
               </h1>
 
               <small className="text-secondary">Since First Interview</small>
@@ -246,7 +246,7 @@ const Dashboard = () => {
       {/* ================= CHART ================= */}
       <Col lg={8}>
         <Card style={cardStyle} className="p-3 h-100">
-          <h5 className="mb-3">📈 Interview Score Progress</h5>
+          <h5 className="mb-3"><span><TrendingUp size={40}  className="me-2 text-success"/></span> Interview Score Progress</h5>
 
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
@@ -309,65 +309,7 @@ const Dashboard = () => {
         </Card>
       </Col>
     </Row>
-
-       
-
-      {/* Main Card */}
-      <Card className="border-0 shadow-lg rounded-4 p-4" style={{ background: "#0f172a" }}>
-        <Card.Body>
-          {/* Label ko clickable banaya taaki file explorer khule */}
-          <label htmlFor="resumeUpload" style={{ width: "100%", cursor: "pointer" }}>
-            <div
-              className="d-flex flex-column justify-content-center align-items-center text-center rounded-4"
-              style={{
-                minHeight: "450px",
-                border: "2px dashed #7C3AED",
-                background: "#1e1b4b40",
-              }}
-            >
-              <div
-                className="d-flex justify-content-center align-items-center rounded-4 mb-4"
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  background: "linear-gradient(135deg,#312e81,#0f766e)",
-                }}
-              >
-                <Upload size={50} className="text-success" />
-              </div>
-              <h2 className="text-white fw-bold"> Drag and drop your PDF resume here, or browse files </h2>
-              <p className="text-secondary fs-5"> Supports PDF up to 5MB </p>
-
-              {/* Hidden File Input */}
-              <input
-                type="file"
-                id="resumeUpload"
-                accept=".pdf"
-                className="d-none"
-                onChange={handleFileUpload}
-              />
-
-              <Button
-                size="lg"
-                disabled={loading}
-                className="px-5 py-3 rounded-4 border-0"
-                style={{
-                  background: "linear-gradient(90deg,#6D28D9,#8B5CF6)",
-                }}
-                as="span"
-              >
-                {
-                  loading
-                    ? "Analyzing Resume..."
-                    : "Analyze Resume"
-                }
-              </Button>
-            </div>
-          </label>
-        </Card.Body>
-      </Card>
-
-      </Container>
+    </Container>
     </div>
   );
 };

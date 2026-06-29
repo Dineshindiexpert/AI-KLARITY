@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import {LayoutDashboard,FileText,Video,TrendingUp,Settings,LogOut,Brain,Menu,X,} from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  Video,
+  TrendingUp,
+  Settings,
+  LogOut,
+  Brain,
+  Menu,
+  X,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function Sidebar({ activePage, onNavigate }) {
@@ -25,6 +35,8 @@ export function Sidebar({ activePage, onNavigate }) {
 
     navigate("/signin", { replace: true });
   };
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
 
   return (
     <>
@@ -94,9 +106,7 @@ export function Sidebar({ activePage, onNavigate }) {
 
       {/* Sidebar */}
       <div
-        className={`custom-sidebar d-flex flex-column ${
-          isOpen ? "show" : ""
-        }`}
+        className={`custom-sidebar d-flex flex-column ${isOpen ? "show" : ""}`}
       >
         {/* Logo */}
         <div className="p-4">
@@ -105,7 +115,10 @@ export function Sidebar({ activePage, onNavigate }) {
             onClick={() => handleNavigation("dashboard")}
             style={{ cursor: "pointer" }}
           >
-            <div className="logo-gradient rounded-3 d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+            <div
+              className="logo-gradient rounded-3 d-flex align-items-center justify-content-center"
+              style={{ width: 40, height: 40 }}
+            >
               <Brain size={24} className="text-white" />
             </div>
             <span className="fs-5 fw-semibold text-white">AI Klarity</span>
@@ -137,17 +150,41 @@ export function Sidebar({ activePage, onNavigate }) {
         <div className="p-3">
           <div className="profile-box rounded-3 p-3 mb-2">
             <div className="d-flex align-items-center gap-3">
-              <div
-                className="avatar-gradient rounded-circle d-flex align-items-center justify-content-center"
-                style={{ width: 40, height: 40 }}
-              >
-                <span className="small fw-bold text-white">DN</span>
-              </div>
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="avatar"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2px solid #7C3AED",
+                    cursor: "pointer",
+                  }}
+                />
+              ) : (
+                <div
+                  className="avatar-gradient rounded-circle d-flex align-items-center justify-content-center"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    background: "linear-gradient(135deg,#7C3AED,#38BDF8)",
+                  }}
+                >
+                  <span className="small fw-bold text-white">
+                    {(user?.name || "U").slice(0, 1).toUpperCase()}
+                  </span>
+                </div>
+              )}
 
               <div>
-                <div className="small fw-medium text-white">Dinesh</div>
+                <div className="small fw-medium text-white">
+                  {" "}
+                  {(user.name || "User").toUpperCase()}
+                </div>
                 <div style={{ fontSize: 12 }} className="text-white-50">
-                  dinesh@email.com
+                  {user.email || "user@email.com"}
                 </div>
               </div>
             </div>

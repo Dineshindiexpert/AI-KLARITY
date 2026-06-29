@@ -1,274 +1,147 @@
 import React from "react";
-import { Card, Row, Col, Button, Container, } from "react-bootstrap";
-import { Calendar3, CreditCard2Front, } from "react-bootstrap-icons";
-
-import GradientBtn from "../buttons/gradientbtn";
+import { Card, Container, Badge, Button } from "react-bootstrap";
+import { CreditCard2Front } from "react-bootstrap-icons";
+import { Sparkles } from "lucide-react";
 
 const BillingLayout = () => {
-    return (
-        <>
-            {/* Current Subscription */}
-            <Card
-                className="border-0 mb-4"
-                style={{
-                    background: "#111C34",
-                    borderRadius: "20px",
-                }}
-            >
-                <Card.Body className="p-4">
-                    <h4 className="fw-bold mb-4 text-white">
-                        Current Subscription
-                    </h4>
+  return (
+    <Container 
+      fluid 
+      className="d-flex align-items-center justify-content-center p-3" 
+      style={{ 
+        minHeight: "100vh", 
+        background: "radial-gradient(circle at top right, #1e1b4b 0%, #090d16 60%, #020617 100%)",
+        position: "relative",
+        overflow: "hidden"
+      }}
+    >
+      {/* Premium Background Glow Artifacts */}
+      <div style={{
+        position: "absolute",
+        width: "350px",
+        height: "350px",
+        background: "radial-gradient(circle, rgba(124,58,237,0.15) 0%, rgba(0,0,0,0) 70%)",
+        top: "10%",
+        left: "15%",
+        zIndex: 0,
+        pointerEvents: "none"
+      }} />
+      <div style={{
+        position: "absolute",
+        width: "400px",
+        height: "400px",
+        background: "radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(0,0,0,0) 70%)",
+        bottom: "10%",
+        right: "15%",
+        zIndex: 0,
+        pointerEvents: "none"
+      }} />
 
-                    {/* Plan Card */}
-                    <div
-                        style={{
-                            background:
-                                "linear-gradient(135deg,#2C215E,#163C43)",
-                            border: "1px solid #5B21B6",
-                            borderRadius: "20px",
-                            padding: "30px",
-                        }}
-                    >
-                        <Row>
-                            <Col md={9}>
-                                <small className="text-secondary">
-                                    Your Plan
-                                </small>
+      <Card 
+        className="text-center p-4 p-md-5 border-0 shadow-2xl" 
+        style={{ 
+          maxWidth: "480px", 
+          width: "100%", 
+          background: "rgba(22, 31, 48, 0.75)", 
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: "1px solid rgba(255, 255, 255, 0.08)", 
+          borderRadius: "24px",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255,255,255,0.1)",
+          zIndex: 1,
+          transform: "translateY(0)",
+          transition: "transform 0.3s ease"
+        }}
+      >
+        {/* ICON CONTAINER WITH DUAL GLOW */}
+        <div className="d-flex justify-content-center mb-4">
+          <div 
+            className="d-flex align-items-center justify-content-center position-relative" 
+            style={{ 
+              width: 80, 
+              height: 80, 
+              borderRadius: 22, 
+              background: "linear-gradient(135deg, #7C3AED 0%, #10B981 100%)",
+            }}
+          >
+            {/* Outer Soft Glow */}
+            <div style={{
+              position: "absolute",
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: "linear-gradient(135deg, #7C3AED 0%, #10B981 100%)",
+              borderRadius: 22,
+              filter: "blur(12px)",
+              opacity: 0.5,
+              zIndex: -1
+            }} />
+            <CreditCard2Front size={34} color="#fff" />
+          </div>
+        </div>
 
-                                <h1 className="fw-bold mt-2 text-white">
-                                    Premium Developer Pass
-                                </h1>
+        {/* METALLIC STYLE BADGE */}
+        <div className="d-flex justify-content-center mb-3">
+          <Badge 
+            className="d-flex align-items-center gap-1.5 px-3 py-2 text-uppercase tracking-wider" 
+            style={{ 
+              background: "linear-gradient(rgba(124,58,237,0.12), rgba(124,58,237,0.05))", 
+              border: "1px solid rgba(124,58,237,0.25)", 
+              color: "#A78BFA", 
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              letterSpacing: "0.05em",
+              borderRadius: "100px"
+            }}
+          >
+            <Sparkles size={13} className="text-purple-400" /> 
+            Billing Module
+          </Badge>
+        </div>
 
-                                <p className="text-white mt-3">
-                                    Full access to AI interview platform and
-                                    analytics
-                                </p>
+        {/* TYPOGRAPHY */}
+        <h2 className="text-white fw-bold mb-2" style={{ letterSpacing: "-0.02em" }}>
+          Coming Soon
+        </h2>
+        
+        <p className="mx-auto mb-4" style={{ color: "#94A3B8", fontSize: "0.925rem", lineHeight: "1.6", maxWidth: "90%" }}>
+          We are building a smart billing system with subscription plans, invoices, and AI-powered upgrades.
+        </p>
 
-                                <div className="mt-4 d-flex align-items-center gap-2">
-                                    <Calendar3 color="#00E5A0" />
-                                    <span className="fw-semibold text-white">
-                                        Next Renewal Date: July 08, 2026
-                                    </span>
-                                </div>
-                            </Col>
+        {/* PREMIUM DISABLED BUTTON */}
+        <Button 
+          disabled 
+          className="w-100 py-2.5 fw-semibold border-0 text-white position-relative overflow-hidden" 
+          style={{ 
+            background: "linear-gradient(135deg, #7C3AED 0%, #10B981 100%)", 
+            borderRadius: "14px",
+            opacity: 0.45,
+            fontSize: "0.95rem",
+            cursor: "not-allowed"
+          }}
+        >
+          Not Available Yet
+        </Button>
 
-                            <Col md={3} className="text-md-end mt-4 mt-md-0">
-                                <small className="text-secondary">
-                                    Monthly Cost
-                                </small>
+        {/* LIVE PULSE STATUS */}
+        <div className="d-flex align-items-center justify-content-center gap-2 mt-4 pt-2">
+          <div className="position-relative d-flex align-items-center justify-content-center" style={{ width: 10, height: 10 }}>
+            <span className="position-absolute" style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F59E0B", opacity: 0.7, animation: "ping 2s cubic-bezier(0, 0, 0.2, 1) infinite" }} />
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#F59E0B", display: "inline-block" }} />
+          </div>
+          <small className="fw-medium" style={{ color: "#64748B", fontSize: "0.8rem", letterSpacing: "0.02em" }}>IN ACTIVE DEVELOPMENT</small>
+        </div>
 
-                                <h1 className="fw-bold text-white">$19</h1>
-
-                                <span className="text-secondary">
-                                    /month
-                                </span>
-                            </Col>
-                        </Row>
-
-                        <hr
-                            style={{
-                                borderColor: "rgba(255,255,255,.1)",
-                                margin: "30px 0",
-                            }}
-                        />
-
-                        <Row className="text-center">
-                            <Col md={4}>
-                                <h2 className="fw-bold text-white">Unlimited</h2>
-                                <p className="text-secondary">
-                                    AI Interviews
-                                </p>
-                            </Col>
-
-                            <Col md={4}>
-                                <h2 className="fw-bold text-white">Advanced</h2>
-                                <p className="text-secondary">
-                                    Analytics & Reports
-                                </p>
-                            </Col>
-
-                            <Col md={4}>
-                                <h2 className="fw-bold text-white">Priority</h2>
-                                <p className="text-secondary">
-                                    Support Access
-                                </p>
-                            </Col>
-                        </Row>
-                    </div>
-
-                    {/* Buttons */}
-                    <Row className="mt-4">
-                        <Col md={6} className="mb-3 mb-md-0">
-                            <Button
-                                className="w-100 fw-semibold text-white"
-                                style={{
-                                    background: "#020617",
-                                    border: "1px solid #1E293B",
-                                    borderRadius: "14px",
-                                    height: "55px",
-                                }}
-                            >
-                                Cancel Subscription
-                            </Button>
-                        </Col>
-
-                        <Col md={6}>
-                            <GradientBtn className="w-100 text-white fw-semibold" style={{ height: "55px" }}>
-                                Upgrade to Annual Plan
-                            </GradientBtn>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
-
-            {/* Payment Method */}
-            <Card
-                className="border-0"
-                style={{
-                    background: "#111C34",
-                    borderRadius: "20px",
-                }}
-            >
-                <Card.Body className="p-4">
-                    <h4 className="fw-bold mb-4t text-white">
-                        Payment Method
-                    </h4>
-
-                    <div
-                        className="d-flex justify-content-between align-items-center flex-wrap"
-                        style={{
-                            background: "#091120",
-                            borderRadius: "18px",
-                            padding: "20px",
-                        }}
-                    >
-                        <div className="d-flex align-items-center gap-3">
-                            <div
-                                className="d-flex align-items-center justify-content-center"
-                                style={{
-                                    width: "48px",
-                                    height: "48px",
-                                    borderRadius: "12px",
-                                    background:
-                                        "linear-gradient(135deg,#7C3AED,#A78BFA)",
-                                }}
-                            >
-                                <CreditCard2Front size={22} />
-                            </div>
-
-                            <div>
-                                <h6 className="mb-1 fw-bold text-white">
-                                    Visa •••• 4242
-                                </h6>
-                                <small className="text-secondary">
-                                    Expires 12/2028
-                                </small>
-                            </div>
-                        </div>
-
-                        <Button className="fw-semibold text-white"
-                            style={{
-                                background: "#020617",
-                                border: "1px solid #1E293B",
-                                borderRadius: "12px",
-                                padding: "10px 20px",
-                            }}
-                        >
-                            Update Card
-                        </Button>
-
-                    </div>
-                    <div className="mt-4">
-                        <Button
-                            className="w-100"
-                            style={{
-                                background: "#020617",
-                                border: "1px solid #5B21B6",
-                                borderRadius: "14px",
-                                height: "55px",
-                                color: "#fff",
-                                fontWeight: "600",
-                            }}
-                        >
-                            Manage Payment Method
-                        </Button>
-                    </div>
-
-                </Card.Body>
-            </Card>
-            <Card
-                className="border-0 mt-4"
-                style={{
-                    background: "#111C34",
-                    borderRadius: "20px",
-                }}
-            >
-                <Card.Body className="p-4">
-                    <h4 className="fw-bold mb-4 text-white">
-                        Invoice History
-                    </h4>
-
-                    <div className="table-responsive">
-                        <table className="table invoice-table align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Invoice ID</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th className="text-end">Action</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {[
-                                    {
-                                        date: "Jun 08, 2026",
-                                        invoice: "INV-2026-1234",
-                                    },
-                                    {
-                                        date: "May 08, 2026",
-                                        invoice: "INV-2026-1189",
-                                    },
-                                    {
-                                        date: "Apr 08, 2026",
-                                        invoice: "INV-2026-1142",
-                                    },
-                                    {
-                                        date: "Mar 08, 2026",
-                                        invoice: "INV-2026-1098",
-                                    },
-                                ].map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{item.date}</td>
-
-                                        <td>{item.invoice}</td>
-
-                                        <td className="fw-bold">
-                                            $19.00
-                                        </td>
-
-                                        <td>
-                                            <span className="status-paid">
-                                                Paid
-                                            </span>
-                                        </td>
-
-                                        <td className="text-end">
-                                            <button className="receipt-btn">
-                                                Download Receipt
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card.Body>
-            </Card>
-        </>
-    );
+        {/* SMOOTH GLOBAL ANIMATIONS */}
+        <style>{`
+          @keyframes ping {
+            75%, 100% {
+              transform: scale(2.5);
+              opacity: 0;
+            }
+          }
+        `}</style>
+      </Card>
+    </Container>
+  );
 };
 
 export default BillingLayout;
