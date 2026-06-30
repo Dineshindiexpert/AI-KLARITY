@@ -1,40 +1,63 @@
-// Aapke Project Ke Theme Variables
-$primary:#6938EF;
-$secondary: #092C4C;
-$dark: #1B2850;
-$white: #ffffff;
-$light: #F9FAFB;
-$info: #155EEF;
-$warning: #FFCA18;
-$success: #28C76F;
-$danger: #FF0000;
-$cyan: #06AED4;
-$indigo: #3538CD;
-$orange: #E04F16;
-$pink: #DD2590;
-$purple: #6938EF;
-$teal: #6938EF;
+// ==========================================
+// 1. PROJECT THEME VARIABLES
+// ==========================================
+$primary:       #6938EF; // Deep Purple
+$secondary:     #092C4C; // Dark Slate Blue
+$dark:          #1B2850; // Navy Deep Dark
+$white:         #ffffff;
+$light:         #F9FAFB;
 
-// Text
-$text-dark: #212B36;
-$text-gray: #646B72;
-$border: #E6EAED;
+// Contextual Colors
+$info:          #155EEF;
+$warning:       #FFCA18;
+$success:       #28C76F;
+$danger:        #FF0000;
+
+// Rainbow Specs
+$cyan:          #06AED4;
+$indigo:        #3538CD;
+$orange:        #E04F16;
+$pink:          #DD2590;
+$purple:        #6938EF;
+$teal:          #6938EF;
+
+// Text & Structural Specs
+$text-dark:     #212B36;
+$text-gray:     #646B72;
+$border:        #E6EAED;
 
 // FONT FAMILY & WEIGHTS
-$font-primary: 'Nunito Sans', sans-serif;
-$font-black: 900;
-$font-bold: 700;
+$font-primary:   'Nunito Sans', sans-serif;
+$font-black:     900;
+$font-bold:      700;
 $font-semi-bold: 600;
-$font-regular: 400;
+$font-regular:   400;
 
-// Custom 404 Page Wrapper
+// ==========================================
+// 2. BOOTSTRAP THEME MAP OVERRIDES
+// ==========================================
+// Isse Bootstrap automatic aapke custom primary/dark colors use karega
+$theme-colors: (
+  "primary":    $primary,
+  "secondary":  $secondary,
+  "dark":       $dark,
+  "light":      $light,
+  "success":    $success,
+  "danger":     $danger
+);
+
+// ==========================================
+// 3. CUSTOM 404 PAGE WRAPPER SPECIFICS
+// ==========================================
 .notfound-wrapper {
   background-color: $dark;
   font-family: $font-primary;
   overflow: hidden;
+  position: relative; // Safely anchor relative absolute layers
 
   // Background Neon Glow
   .glow-effect {
+    position: absolute; // Added missing standard position layout
     top: 25%;
     left: 50%;
     width: 350px;
@@ -51,7 +74,7 @@ $font-regular: 400;
     letter-spacing: 0.05em;
     background: linear-gradient(to right, $primary, $purple);
     -webkit-background-clip: text;
-    -webkit-text-fillColor: transparent;
+    -webkit-text-fill-color: transparent; // Fixed: Case sensitivity bug resolved
     margin: 0;
   }
 
@@ -71,26 +94,28 @@ $font-regular: 400;
     font-weight: $font-regular;
   }
 
-  // Action Button
+  // Action Button (Premium Glow Up)
   .custom-btn {
     background-color: $primary;
-    color: $dark;
+    color: $white; // Fixed: Purple bg par white text readability badhayega
     border-radius: 8px;
     font-size: 1rem;
     font-weight: $font-semi-bold;
-    box-shadow: 0 8px 24px rgba($primary, 0.2);
+    box-shadow: 0 8px 24px rgba($primary, 0.25);
     transition: all 0.3s ease-in-out;
     border: none;
 
     &:hover {
       background-color: darken($primary, 8%);
       transform: translateY(-2px);
-      color: $dark;
+      color: $white; // Keep text crisp on hover
+      box-shadow: 0 12px 28px rgba($primary, 0.35); // Extended interactive hover depth
     }
   }
 
   // Footer Branding
   .footer-text {
+    position: absolute; // Anchored down securely
     color: $text-gray;
     font-size: 0.8rem;
     bottom: 24px;

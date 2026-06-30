@@ -109,19 +109,27 @@ export function Sidebar({ activePage, onNavigate }) {
         className={`custom-sidebar d-flex flex-column ${isOpen ? "show" : ""}`}
       >
         {/* Logo */}
-        <div className="p-4">
+        <div className="p-3">
           <div
-            className="d-flex align-items-center gap-3"
+            className="d-flex align-items-center "
             onClick={() => handleNavigation("dashboard")}
             style={{ cursor: "pointer" }}
           >
             <div
-              className="logo-gradient rounded-3 d-flex align-items-center justify-content-center"
-              style={{ width: 40, height: 40 }}
+              className=" d-flex align-items-center  "
+              style={{ width: "50%", height: "50% " }}
             >
-              <Brain size={24} className="text-white" />
+              <div>
+                <img
+                  src="/logo.png"
+                  alt="logo"
+                  style={{ width: "75%", height: "100%", objectFit: "cover" }}
+                />
+              </div>
             </div>
-            <span className="fs-5 fw-semibold text-white">AI Klarity</span>
+            <div>
+              <h1 className="fs-5 fw-bold text-white ">AI Klarity</h1>
+            </div>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import {Container,Row,Col,Card,Button,Form,Badge,Spinner,} from "react-bootstrap";
 
-import {MicFill,ClockFill,BoxArrowRight,ArrowRight,CpuFill,} from "react-bootstrap-icons";
+import {MicFill,ClockFill,BoxArrowRight,ArrowRight,CpuFill, Stopwatch,} from "react-bootstrap-icons";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { nextQuestion, finishInterview } from "../../api/interviewApi";
@@ -150,11 +150,8 @@ const InterviewSession = () => {
     <div className="vh-100 d-flex flex-column" style={{ background: "#0B0F19" }}>
       {/* HEADER SECTION */}
       <div
-        className="px-4 py-3 border-bottom"
-        style={{
-          background: "#111827",
-          borderColor: "rgba(255,255,255,.08)",
-        }}
+        className="px-4 py-4 border-bottom "
+        
       >
         <div className="d-flex justify-content-between align-items-center">
           <div>
@@ -162,17 +159,18 @@ const InterviewSession = () => {
             <small style={{ color: "#94A3B8" }}>Real Interview Simulation</small>
           </div>
 
-          <div className="d-flex align-items-center gap-4">
-            <div className="text-white">
-              <ClockFill className="me-2" color="#60A5FA" />
-              {formatTime()}
+          <div className="d-flex align-items-center gap-4 ">
+            <div className="text-success border rounded rounded-4 px-3 py-1 border-success">
+              <Stopwatch className="me-2 text-success" size={25} />
+              {formatTime()} mins
             </div>
 
-            <small style={{ color: "#94A3B8" }}>
+            <small className="text-warning">
               Q {currentQuestion}/{totalQuestions}
             </small>
 
             <Button
+            className="rouded  rounded-4"
               variant="outline-danger"
               size="sm"
               onClick={handleFinish}
@@ -238,7 +236,7 @@ const InterviewSession = () => {
                 disabled={loading || finishing}
                 onClick={() => setVoiceMode(!voiceMode)}
               >
-                {voiceMode ? "🛑 Switch to Keyboard Mode" : "🎤 Turn On Voice Assistant"}
+                {voiceMode ? " Switch to Keyboard Mode" : " Turn On Voice Assistant"}
               </Button>
             </Card>
           </Col>

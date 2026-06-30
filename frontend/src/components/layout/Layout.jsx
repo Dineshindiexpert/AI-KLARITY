@@ -38,10 +38,10 @@ const MainLayout = () => {
       />
 
       {/* Main Content */}
-      <div className="flex-grow-1 overflow-auto" style={{ background: "#020817" }}>
+      <div className="flex-grow-1 overflow-auto"  >
         {/* Page Content */}
-        <div  style={{ marginTop: "60px" }}>
-          {/* React Router is Outlet ki jagah par aapke switch hone wale pages dikhayega */}
+        <div >
+           
           <Outlet />
         </div>
       </div>
